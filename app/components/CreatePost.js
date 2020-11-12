@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Axios from 'axios'
 import Page from './Page'
+import DispatchContext from '../context/DispatchContext'
+import StateContext from '../context/StateContext'
 
 function CreatePost() {
+	const appDispatch = useContext(DispatchContext)
+	const appState = useContext(StateContext)
+
 	const history = useHistory()
 	const [title, setTitle] = useState()
 	const [body, setBody] = useState()
+
 	async function handleSubmit(e) {
 		e.preventDefault()
 		try {
 			const response = await Axios.post('/create-post', {
-				token: localStorage.getItem('complexappToken'),
+				token: appState.user.token,
 				title,
 				body
 			})
 			//Redirect to new post URL
+			appDispatch({
+				type: 'flashMessage',
+				value: 'Congrats, you successfully created a post'
+			})
 			history.push(`/post/${response.data}`)
 		} catch (error) {
 			console.log('There was an error.', error)
