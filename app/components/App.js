@@ -14,6 +14,7 @@ import CreatePost from './CreatePost'
 import ViewSinglePost from './ViewSinglePost'
 import FlashMessages from './FlashMessages'
 import Profile from './Profile'
+import EditPost from './EditPost'
 
 import StateContext from '../context/StateContext'
 import DispatchContext from '../context/DispatchContext'
@@ -58,8 +59,11 @@ function App() {
 						<Route path='/create-post'>
 							<CreatePost />
 						</Route>
-						<Route path='/post/:id'>
+						<Route path='/post/:id' exact>
 							<ViewSinglePost />
+						</Route>
+						<Route path='/post/:id/edit' exact>
+							<EditPost />
 						</Route>
 						<Route path='/about-us'>
 							<About />
