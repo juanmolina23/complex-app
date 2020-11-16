@@ -12,6 +12,12 @@ function ourReducer(draft, action) {
 		case 'flashMessage':
 			draft.flashMessages.push(action.value)
 			return
+		case 'openSearch':
+			draft.isSearchOpen = true
+			return
+		case 'closeSearch':
+			draft.isSearchOpen = false
+			return
 	}
 }
 
