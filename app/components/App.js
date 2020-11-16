@@ -15,6 +15,7 @@ import ViewSinglePost from './ViewSinglePost'
 import FlashMessages from './FlashMessages'
 import Profile from './Profile'
 import EditPost from './EditPost'
+import NotFound from './NotFound'
 
 import StateContext from '../context/StateContext'
 import DispatchContext from '../context/DispatchContext'
@@ -70,6 +71,9 @@ function App() {
 						</Route>
 						<Route path='/terms'>
 							<Terms />
+						</Route>
+						<Route>
+							<NotFound />
 						</Route>
 					</Switch>
 

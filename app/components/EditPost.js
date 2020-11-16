@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useContext } from 'react'
 import Axios from 'axios'
 import { useImmerReducer } from 'use-immer'
-import { useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 
 import StateContext from '../context/StateContext'
 import DispatchContext from '../context/DispatchContext'
 import Page from './Page'
 import LoadingDotsIcon from './LoadingDotsIcon'
+import NotFound from './NotFound'
 
 function ViewSinglePost() {
 	const appState = useContext(StateContext)
 	const appDispatch = useContext(DispatchContext)
+	const history = useHistory()
 
 	const originalState = {
 		title: {
@@ -26,7 +28,8 @@ function ViewSinglePost() {
 		isFetching: true,
 		isSaving: false,
 		id: useParams().id,
-		sendCount: 0
+		sendCount: 0,
+		notFound: false
 	}
 
 	function ourReducer(draft, action) {
@@ -71,6 +74,9 @@ function ViewSinglePost() {
 					draft.body.message = ''
 				}
 				return
+			case 'notFound':
+				draft.notFound = true
+				return
 		}
 	}
 	const [state, dispatch] = useImmerReducer(ourReducer, originalState)
@@ -90,7 +96,18 @@ function ViewSinglePost() {
 				const response = await Axios.get(`/post/${state.id}`, {
 					cancelToken: ourRequest.token
 				})
-				dispatch({ type: 'fetchComplete', value: response.data })
+				if (response.data) {
+					dispatch({ type: 'fetchComplete', value: response.data })
+					if (appState.user.username != response.data.author.username) {
+						appDispatch({
+							type: 'flashMessage',
+							value: 'You do not have permission to edit this post'
+						})
+						history.push('/')
+					}
+				} else {
+					dispatch({ type: 'notFound' })
+				}
 			} catch (error) {
 				console.log('There was a problem or the request was cancelled.', error)
 			}
@@ -136,6 +153,10 @@ function ViewSinglePost() {
 		}
 	}, [state.sendCount])
 
+	if (state.notFound) {
+		return <NotFound />
+	}
+
 	if (state.isFetching)
 		return (
 			<Page title='...'>
@@ -145,7 +166,10 @@ function ViewSinglePost() {
 
 	return (
 		<Page title='Edit Post'>
-			<form onSubmit={e => submitHandler(e)}>
+			<Link className='small font-weight-bold' to={`/post/${state.id}`}>
+				&laquo; Back to the post permalink
+			</Link>
+			<form className='mt-3' onSubmit={e => submitHandler(e)}>
 				<div className='form-group'>
 					<label htmlFor='post-title' className='text-muted mb-1'>
 						<small>Title</small>
