@@ -18,6 +18,7 @@ import Profile from './Profile'
 import EditPost from './EditPost'
 import NotFound from './NotFound'
 import Search from './Search'
+import Chat from './Chat'
 
 import StateContext from '../context/StateContext'
 import DispatchContext from '../context/DispatchContext'
@@ -32,7 +33,9 @@ function App() {
 			username: localStorage.getItem('complexappUsername'),
 			avatar: localStorage.getItem('complexappAvatar')
 		},
-		isSearchOpen: false
+		isSearchOpen: false,
+		isChatOpen: false,
+		unreadChatCount: 0
 	}
 
 	const [state, dispatch] = useImmerReducer(ourReducer, initialState)
@@ -87,6 +90,7 @@ function App() {
 					>
 						<Search />
 					</CSSTransition>
+					<Chat />
 					<Footer />
 				</BrowserRouter>
 			</DispatchContext.Provider>
