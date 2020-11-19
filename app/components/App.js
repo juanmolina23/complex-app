@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { useImmerReducer } from 'use-immer'
 import { CSSTransition } from 'react-transition-group'
 import Axios from 'axios'
-Axios.defaults.baseURL = process.env.BACKENDURL || ''
+Axios.defaults.baseURL =
+	process.env.BACKENDURL || 'https://molina-backend-complexapp.herokuapp.com'
 
 import Header from './Header'
 import HomeGuest from './HomeGuest'
